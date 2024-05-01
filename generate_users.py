@@ -25,11 +25,13 @@ with open(args.output, "w", encoding="utf-8") as csvfile:
     writer.writeheader()
     for i in range(args.num_users):
         host = ""
+        domain_separator = ""
 
         if args.domains is not None:
              host = random.choices(args.domains, args.weights)[0]
+             domain_separator = ":"
 
-        username = "user.{:06d}:{}".format(i, host)
+        username = "user.{:06d}{}{}".format(i, domain_separator, host)
         # WARNING: This is not a safe way to generate real passwords!
         #          Do not do this in real life!
         #          Instead, use the Python `secrets` module.
