@@ -86,7 +86,9 @@ def on_locust_init(environment, **_kwargs):
     # Single-worker
     elif not isinstance(environment.runner, WorkerRunner) and not isinstance(environment.runner, MasterRunner):
         # Open our list of users
-        CirclesUser.worker_users = csv.DictReader(open("users.csv"))
+        # CirclesUser.worker_users = csv.DictReader(open("users.csv"))
+        print("Single worker, loading users.csv...")
+        CirclesUser.worker_users = iter(csv.DictReader(open("users.csv")))
 
 ###########################################################
 
