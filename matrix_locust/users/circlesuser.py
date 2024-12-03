@@ -80,15 +80,15 @@ def on_locust_init(environment, **_kwargs):
         logging.warning(f"Failed to increase the resource limit: {e}")
 
     # Multi-worker
-    if isinstance(environment.runner, WorkerRunner):
-        print(f"Registered 'load_users' handler on {environment.runner.client_id}")
-        environment.runner.register_message("load_users", CirclesUser.load_users)
-    # Single-worker
-    elif not isinstance(environment.runner, WorkerRunner) and not isinstance(environment.runner, MasterRunner):
+    # if isinstance(environment.runner, WorkerRunner):
+    #     print(f"Registered 'load_users' handler on {environment.runner.client_id}")
+    #     environment.runner.register_message("load_users", CirclesUser.load_users)
+    # # Single-worker
+    # elif not isinstance(environment.runner, WorkerRunner) and not isinstance(environment.runner, MasterRunner):
         # Open our list of users
         # CirclesUser.worker_users = csv.DictReader(open("users.csv"))
-        print("Single worker, loading users.csv...")
-        CirclesUser.worker_users = iter(csv.DictReader(open("users.csv")))
+    print("Single worker, loading users.csv...")
+    CirclesUser.worker_users = iter(csv.DictReader(open("users.csv")))
 
 ###########################################################
 
@@ -140,85 +140,85 @@ class CirclesUser(MatrixUser):
         # Setup user profile
         # * Displayname
         # * Avatar URL
-        self.matrix_client.set_displayname(self.matrix_client.user)
-        self.matrix_client.set_avatar("")
+        # self.matrix_client.set_displayname(self.matrix_client.user)
+        # self.matrix_client.set_avatar("")
 
 
-        private_rule = ChangeJoinRulesBuilder("private")
+        # private_rule = ChangeJoinRulesBuilder("private")
 
-        # # spec says to use knock rule instead?
-        # invite_rule = ChangeJoinRulesBuilder("invite")
+        # # # spec says to use knock rule instead?
+        # # invite_rule = ChangeJoinRulesBuilder("invite")
 
-        # re-add space content to tagging? think it uses canonical at least...
-        space_content = {
-            "canonical": True,
-            "via": [
-                "example.org",
-                "other.example.org"
-            ]
-        }
-
-
-        # temp rules dicts
-        power_levels_space_dict = {
-            "events_default": 100,
-        }
-
-        power_levels_dict = {
-            "invite": 50,
-        }
+        # # re-add space content to tagging? think it uses canonical at least...
+        # space_content = {
+        #     "canonical": True,
+        #     "via": [
+        #         "example.org",
+        #         "other.example.org"
+        #     ]
+        # }
 
 
-         # emulating android app with 1s delay
-        # gevent.sleep(1)
-        # time.sleep(1)
+        # # temp rules dicts
+        # power_levels_space_dict = {
+        #     "events_default": 100,
+        # }
 
-        # Create Circles spaces hierarchy
-        root_room_id = self.create_room("Circles", None, None, None, "m.space",
-                                        "org.futo.space.root", None,
-                                        power_levels_space_dict, private_rule.as_dict())
-        if client_sleep:
-            gevent.sleep(1)
-
-        circles_room_id = self.create_room("My Circles", None, None, None, "m.space",
-                                           "org.futo.space.circles", root_room_id,
-                                           power_levels_space_dict, private_rule.as_dict())
-        if client_sleep:
-            gevent.sleep(1)
-
-        groups_room_id = self.create_room("My Groups", None, None, None, "m.space",
-                                          "org.futo.space.groups", root_room_id,
-                                          power_levels_space_dict, private_rule.as_dict())
-        if client_sleep:
-            gevent.sleep(1)
-
-        photos_room_id = self.create_room("My Photo Galleries", None, None, None, "m.space",
-                                          "org.futo.space.photos", root_room_id,
-                                          power_levels_space_dict, private_rule.as_dict())
-        if client_sleep:
-            gevent.sleep(1)
+        # power_levels_dict = {
+        #     "invite": 50,
+        # }
 
 
-        # "My People" and "User display name" spaces not created in android app?
+        #  # emulating android app with 1s delay
+        # # gevent.sleep(1)
+        # # time.sleep(1)
 
-        # Create sub-space rooms
-        self.create_room("Photos", None, None, None, "org.futo.social.gallery",
-                         "org.futo.social.gallery", photos_room_id,
-                         power_levels_dict, private_rule.as_dict())
-        if client_sleep:
-            gevent.sleep(1)
+        # # Create Circles spaces hierarchy
+        # root_room_id = self.create_room("Circles", None, None, None, "m.space",
+        #                                 "org.futo.space.root", None,
+        #                                 power_levels_space_dict, private_rule.as_dict())
+        # if client_sleep:
+        #     gevent.sleep(1)
 
-        self.create_circle_with_timeline("Friends", None, circles_room_id)
-        if client_sleep:
-            gevent.sleep(1)
+        # circles_room_id = self.create_room("My Circles", None, None, None, "m.space",
+        #                                    "org.futo.space.circles", root_room_id,
+        #                                    power_levels_space_dict, private_rule.as_dict())
+        # if client_sleep:
+        #     gevent.sleep(1)
 
-        self.create_circle_with_timeline("Family", None, circles_room_id)
-        if client_sleep:
-            gevent.sleep(1)
+        # groups_room_id = self.create_room("My Groups", None, None, None, "m.space",
+        #                                   "org.futo.space.groups", root_room_id,
+        #                                   power_levels_space_dict, private_rule.as_dict())
+        # if client_sleep:
+        #     gevent.sleep(1)
 
-        self.create_circle_with_timeline("Community", None, circles_room_id)
-        if client_sleep:
-            gevent.sleep(1)
+        # photos_room_id = self.create_room("My Photo Galleries", None, None, None, "m.space",
+        #                                   "org.futo.space.photos", root_room_id,
+        #                                   power_levels_space_dict, private_rule.as_dict())
+        # if client_sleep:
+        #     gevent.sleep(1)
+
+
+        # # "My People" and "User display name" spaces not created in android app?
+
+        # # Create sub-space rooms
+        # self.create_room("Photos", None, None, None, "org.futo.social.gallery",
+        #                  "org.futo.social.gallery", photos_room_id,
+        #                  power_levels_dict, private_rule.as_dict())
+        # if client_sleep:
+        #     gevent.sleep(1)
+
+        # self.create_circle_with_timeline("Friends", None, circles_room_id)
+        # if client_sleep:
+        #     gevent.sleep(1)
+
+        # self.create_circle_with_timeline("Family", None, circles_room_id)
+        # if client_sleep:
+        #     gevent.sleep(1)
+
+        # self.create_circle_with_timeline("Community", None, circles_room_id)
+        # if client_sleep:
+        #     gevent.sleep(1)
 
         # Set room names and avatars
 
