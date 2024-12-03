@@ -1,4 +1,3 @@
 [submodule "matrix_locust/bsspeke"]
 	path = matrix_locust/bsspeke
 	url = https://github.com/circles-project/swiclops.git
-    ignore = dirty
